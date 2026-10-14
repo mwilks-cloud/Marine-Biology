@@ -6,73 +6,81 @@
     <title>Seafloor Topography Interactive Map</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
             margin: 0;
             padding: 15px;
-            color: #2c3e50;
+            color: #1e293b;
         }
         .container {
-            max-width: 850px;
+            max-width: 880px;
             margin: 0 auto;
             background: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
         .header {
-            background-color: #0d3b66;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
             color: #ffffff;
-            padding: 15px 20px;
-            border-radius: 6px;
+            padding: 18px 20px;
+            border-radius: 8px;
             text-align: center;
         }
         .map-wrapper {
             position: relative;
             width: 100%;
             margin: 20px 0;
-            background-color: #e0f7fa;
-            border: 2px solid #0077b6;
-            border-radius: 8px;
+            border: 2px solid #0284c7;
+            border-radius: 10px;
             overflow: hidden;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
         }
         svg {
             width: 100%;
             height: auto;
             display: block;
         }
+        /* Fixed hotspot animation to eliminate shaking/flicker */
         .hotspot {
             cursor: pointer;
-            transition: transform 0.2s, fill 0.2s;
         }
-        .hotspot:hover {
-            fill: #ffd166 !important;
-            transform: scale(1.1);
-            transform-origin: center;
+        .hotspot circle {
+            transition: fill 0.25s ease, stroke-width 0.25s ease;
+        }
+        .hotspot:hover circle {
+            fill: #f59e0b !important;
+            stroke: #ffffff;
+            stroke-width: 3px;
         }
         .info-card {
-            background-color: #f8f9fa;
-            border-left: 6px solid #0077b6;
-            padding: 18px;
-            border-radius: 6px;
+            background-color: #f8fafc;
+            border-left: 6px solid #0284c7;
+            padding: 20px;
+            border-radius: 8px;
             margin-top: 15px;
             min-height: 90px;
+            transition: all 0.3s ease;
         }
         .info-title {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: bold;
-            color: #0d3b66;
-            margin-bottom: 6px;
+            color: #0f172a;
+            margin-bottom: 8px;
         }
         .land-eq {
-            margin-top: 8px;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #dcfce7;
+            border-radius: 6px;
             font-weight: bold;
-            color: #27ae60;
+            color: #15803d;
+            display: inline-block;
         }
         .instructions {
             text-align: center;
-            font-weight: bold;
-            color: #0077b6;
+            font-weight: 600;
+            color: #0369a1;
             margin-top: 10px;
         }
     </style>
@@ -81,69 +89,107 @@
 
 <div class="container">
     <div class="header">
-        <h2 style="margin:0;">🗺️ Interactive Ocean Topography Explorer</h2>
-        <p style="margin:5px 0 0 0; color:#e0f2fe;">Click on any feature or marker on the ocean floor map to explore!</p>
+        <h2 style="margin:0; font-size: 22px;">🌊 Realistic Ocean Bathymetry & Topography</h2>
+        <p style="margin:6px 0 0 0; color:#93c5fd; font-size: 14px;">Click any numbered marker along the seafloor cross-section to examine its bathymetry!</p>
     </div>
 
-    <!-- INTERACTIVE MAP DIAGRAM -->
+    <!-- REALISTIC MAP DIAGRAM -->
     <div class="map-wrapper">
-        <svg viewBox="0 0 800 350" xmlns="http://www.w3.org/2000/svg">
-            <!-- Sky/Water Boundary -->
-            <rect x="0" y="0" width="800" height="60" fill="#81d4fa"/>
-            <rect x="0" y="60" width="800" height="290" fill="#0288d1" opacity="0.85"/>
+        <svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Water Depth Gradient -->
+                <linearGradient id="waterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.9"/>
+                    <stop offset="25%" stop-color="#0284c7" stop-opacity="0.95"/>
+                    <stop offset="65%" stop-color="#0369a1" stop-opacity="1"/>
+                    <stop offset="100%" stop-color="#090d16" stop-opacity="1"/>
+                </linearGradient>
+
+                <!-- Crust Texture Gradient -->
+                <linearGradient id="crustGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#78350f"/>
+                    <stop offset="15%" stop-color="#451a03"/>
+                    <stop offset="100%" stop-color="#1c1917"/>
+                </linearGradient>
+            </defs>
+
+            <!-- Atmosphere / Sea Surface -->
+            <rect x="0" y="0" width="900" height="50" fill="#bae6fd"/>
             
-            <!-- Sea Level Line -->
-            <line x1="0" y1="60" x2="800" y2="60" stroke="#004d40" stroke-width="3" stroke-dasharray="8,5"/>
-            <text x="10" y="50" font-size="14" font-weight="bold" fill="#004d40">Sea Level 🌊</text>
+            <!-- Ocean Water Column -->
+            <rect x="0" y="50" width="900" height="350" fill="url(#waterGrad)"/>
+            
+            <!-- Sea Level Wave Line -->
+            <line x1="0" y1="50" x2="900" y2="50" stroke="#0284c7" stroke-width="4" stroke-dasharray="10,6"/>
+            <text x="15" y="38" font-size="13" font-weight="bold" fill="#0369a1">Sea Level (0m) 🌊</text>
 
-            <!-- Seafloor Topography Profile Path -->
-            <path d="M 0 100 L 120 120 L 220 270 L 380 270 L 440 180 L 480 270 L 550 270 L 600 330 L 640 270 L 800 270 L 800 350 L 0 350 Z" fill="#8d6e63" stroke="#4e342e" stroke-width="4"/>
+            <!-- Detailed Seafloor Lithosphere Cross-Section -->
+            <path d="M 0 90 
+                     L 140 110 
+                     L 240 280 
+                     L 420 280 
+                     L 470 180 
+                     L 490 220 
+                     L 520 180 
+                     L 570 280 
+                     L 660 370 
+                     L 710 280 
+                     L 900 280 
+                     L 900 400 
+                     L 0 400 Z" 
+                  fill="url(#crustGrad)" stroke="#292524" stroke-width="3"/>
 
-            <!-- CLICKABLE HOTSPOTS (MARKERS ON MAP) -->
-            <!-- Continental Shelf -->
+            <!-- Magma Chamber Under Mid-Ocean Ridge -->
+            <polygon points="490,380 470,250 520,250" fill="#dc2626" opacity="0.6"/>
+
+            <!-- Subduction Zone Arrow -->
+            <path d="M 640 310 L 680 380" stroke="#ef4444" stroke-width="4" stroke-dasharray="5,4"/>
+
+            <!-- CLICKABLE HOTSPOTS (FIXED HOVER STABILITY) -->
+            <!-- 1. Continental Shelf -->
             <g class="hotspot" onclick="showFeature('shelf')">
-                <circle cx="60" cy="100" r="16" fill="#ef5350"/>
-                <text x="60" y="105" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">1</text>
-                <text x="50" y="80" font-size="12" font-weight="bold" fill="#000">Shelf</text>
+                <circle cx="70" cy="100" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
+                <text x="70" y="105" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">1</text>
+                <text x="70" y="75" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">Shelf</text>
             </g>
 
-            <!-- Continental Slope -->
+            <!-- 2. Continental Slope -->
             <g class="hotspot" onclick="showFeature('slope')">
-                <circle cx="170" cy="195" r="16" fill="#ef5350"/>
-                <text x="170" y="200" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">2</text>
-                <text x="120" y="180" font-size="12" font-weight="bold" fill="#fff">Slope</text>
+                <circle cx="190" cy="195" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
+                <text x="190" y="200" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">2</text>
+                <text x="140" y="180" font-size="12" font-weight="bold" fill="#ffffff">Slope</text>
             </g>
 
-            <!-- Abyssal Plain -->
+            <!-- 3. Abyssal Plain -->
             <g class="hotspot" onclick="showFeature('plain')">
-                <circle cx="300" cy="250" r="16" fill="#ef5350"/>
-                <text x="300" y="255" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">3</text>
-                <text x="260" y="235" font-size="12" font-weight="bold" fill="#fff">Abyssal Plain</text>
+                <circle cx="330" cy="280" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
+                <text x="330" y="285" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">3</text>
+                <text x="330" y="250" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">Abyssal Plain</text>
             </g>
 
-            <!-- Mid-Ocean Ridge -->
+            <!-- 4. Mid-Ocean Ridge -->
             <g class="hotspot" onclick="showFeature('ridge')">
-                <circle cx="440" cy="160" r="16" fill="#ef5350"/>
-                <text x="440" y="165" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">4</text>
-                <text x="390" y="140" font-size="12" font-weight="bold" fill="#fff">Mid-Ocean Ridge</text>
+                <circle cx="490" cy="180" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
+                <text x="490" y="185" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">4</text>
+                <text x="490" y="145" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">Mid-Ocean Ridge</text>
             </g>
 
-            <!-- Trench -->
+            <!-- 5. Ocean Trench -->
             <g class="hotspot" onclick="showFeature('trench')">
-                <circle cx="600" cy="310" r="16" fill="#ef5350"/>
-                <text x="600" y="315" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">5</text>
-                <text x="620" y="330" font-size="12" font-weight="bold" fill="#fff">Trench</text>
+                <circle cx="660" cy="350" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
+                <text x="660" y="355" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">5</text>
+                <text x="720" y="365" font-size="12" font-weight="bold" fill="#ffffff">Trench</text>
             </g>
         </svg>
     </div>
 
-    <p class="instructions">👆 Click numbers 1–5 on the map above to locate each feature!</p>
+    <p class="instructions">👆 Click markers 1–5 on the seafloor map to explore underwater geography!</p>
 
     <!-- DYNAMIC DISPLAY CARD -->
     <div class="info-card" id="info-box">
-        <div class="info-title">👈 Select a feature on the map</div>
-        <div id="info-body">Click any numbered marker on the map above to view its underwater definition and compare it to land landforms.</div>
-        <div class="land-eq" id="info-land"></div>
+        <div class="info-title" id="info-title">👈 Select a feature on the map</div>
+        <div id="info-body" style="color: #475569; line-height: 1.6;">Click any numbered marker on the map above to view its underwater topography definition and compare it to landforms.</div>
+        <div id="info-land"></div>
     </div>
 </div>
 
@@ -151,36 +197,36 @@
     const features = {
         shelf: {
             title: "1. Continental Shelf 🏖️",
-            desc: "The shallow, gently sloping underwater region extending outward from the edge of a continent. Sunlight reaches here, making it home to most ocean life!",
-            land: "⛰️ Land Equivalent: Coastal plains and flat beach shores."
+            desc: "The shallow, gently sloping region extending outward from the edge of a continent (0–200m depth). Sunlight penetrates here, supporting rich marine ecosystems and reef environments.",
+            land: "⛰️ Land Equivalent: Coastal plains and beach shores."
         },
         slope: {
             title: "2. Continental Slope & Rise ⛰️",
-            desc: "The steep underwater cliff that plunges down from the shallow shelf to the deep ocean floor.",
-            land: "⛰️ Land Equivalent: Steep mountain cliffs or canyon walls."
+            desc: "The steep underwater cliff connecting the shallow shelf down to the abyssal ocean floor. It is often cut by submarine canyons formed by turbidity currents.",
+            land: "⛰️ Land Equivalent: Mountain cliffs or steep canyon walls."
         },
         plain: {
             title: "3. Abyssal Plain 🌌",
-            desc: "Vast, flat, pitch-black areas covering the deepest parts of the open ocean floor (3,000–6,000 meters deep).",
+            desc: "Vast, extremely flat, pitch-black expanses covering the deep ocean floor (3,000–6,000 meters deep). They are covered in thick layers of marine sediment.",
             land: "⛰️ Land Equivalent: The Great Plains or flat desert basins."
         },
         ridge: {
             title: "4. Mid-Ocean Ridge 🌋",
-            desc: "An underwater mountain range formed where tectonic plates pull apart and rising magma creates fresh ocean crust.",
-            land: "⛰️ Land Equivalent: Mountain ranges (like the Rocky Mountains or Andes)."
+            desc: "A continuous 65,000 km long underwater mountain chain formed where tectonic plates diverge (pull apart). Rising mantle magma creates brand new oceanic crust here.",
+            land: "⛰️ Land Equivalent: Continental mountain chains (like the Rocky Mountains or Andes)."
         },
         trench: {
             title: "5. Ocean Trench 🕳️",
-            desc: "Deep, steep-sided V-shaped valleys formed where one tectonic plate slides underneath another (subduction).",
+            desc: "Deep, steep-sided V-shaped canyons formed where one tectonic plate slides under another (subduction zone). Includes the Mariana Trench, the deepest point on Earth (11,000m).",
             land: "⛰️ Land Equivalent: Deep canyons (like the Grand Canyon)."
         }
     };
 
     function showFeature(key) {
-        document.getElementById('info-box').style.borderLeftColor = '#27ae60';
-        document.getElementById('info-box').children[0].innerText = features[key].title;
+        document.getElementById('info-box').style.borderLeftColor = '#16a34a';
+        document.getElementById('info-title').innerText = features[key].title;
         document.getElementById('info-body').innerText = features[key].desc;
-        document.getElementById('info-land').innerText = features[key].land;
+        document.getElementById('info-land').innerHTML = `<div class="land-eq">${features[key].land}</div>`;
     }
 </script>
 
