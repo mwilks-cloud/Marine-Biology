@@ -41,18 +41,25 @@
             height: auto;
             display: block;
         }
-        /* Fixed hotspot animation to eliminate shaking/flicker */
+        
+        /* Smooth, non-shaking hover interactions */
         .hotspot {
             cursor: pointer;
         }
-        .hotspot circle {
-            transition: fill 0.25s ease, stroke-width 0.25s ease;
+        /* Prevents text labels from stealing mouse events or causing flicker */
+        .hotspot text {
+            pointer-events: none;
+            user-select: none;
         }
-        .hotspot:hover circle {
+        .hotspot circle.btn-circle {
+            transition: fill 0.2s ease, stroke-width 0.2s ease;
+        }
+        .hotspot:hover circle.btn-circle {
             fill: #f59e0b !important;
             stroke: #ffffff;
             stroke-width: 3px;
         }
+
         .info-card {
             background-color: #f8fafc;
             border-left: 6px solid #0284c7;
@@ -124,8 +131,8 @@
             <text x="15" y="38" font-size="13" font-weight="bold" fill="#0369a1">Sea Level (0m) 🌊</text>
 
             <!-- Detailed Seafloor Lithosphere Cross-Section -->
-            <path d="M 0 90 
-                     L 140 110 
+            <path d="M 0 100 
+                     L 140 120 
                      L 240 280 
                      L 420 280 
                      L 470 180 
@@ -145,38 +152,43 @@
             <!-- Subduction Zone Arrow -->
             <path d="M 640 310 L 680 380" stroke="#ef4444" stroke-width="4" stroke-dasharray="5,4"/>
 
-            <!-- CLICKABLE HOTSPOTS (FIXED HOVER STABILITY) -->
-            <!-- 1. Continental Shelf -->
+            <!-- CLICKABLE HOTSPOTS -->
+            <!-- 1. Continental Shelf (Adjusted & Stabilized) -->
             <g class="hotspot" onclick="showFeature('shelf')">
-                <circle cx="70" cy="100" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
-                <text x="70" y="105" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">1</text>
-                <text x="70" y="75" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">Shelf</text>
+                <circle cx="70" cy="110" r="28" fill="transparent"/> <!-- Expanded Hitbox -->
+                <circle class="btn-circle" cx="70" cy="110" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
+                <text x="70" y="115" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">1</text>
+                <text x="70" y="82" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">Shelf</text>
             </g>
 
             <!-- 2. Continental Slope -->
             <g class="hotspot" onclick="showFeature('slope')">
-                <circle cx="190" cy="195" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
-                <text x="190" y="200" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">2</text>
-                <text x="140" y="180" font-size="12" font-weight="bold" fill="#ffffff">Slope</text>
+                <circle cx="190" cy="200" r="28" fill="transparent"/>
+                <circle class="btn-circle" cx="190" cy="200" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
+                <text x="190" y="205" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">2</text>
+                <text x="140" y="185" font-size="12" font-weight="bold" fill="#ffffff">Slope</text>
             </g>
 
             <!-- 3. Abyssal Plain -->
             <g class="hotspot" onclick="showFeature('plain')">
-                <circle cx="330" cy="280" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
+                <circle cx="330" cy="280" r="28" fill="transparent"/>
+                <circle class="btn-circle" cx="330" cy="280" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
                 <text x="330" y="285" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">3</text>
                 <text x="330" y="250" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">Abyssal Plain</text>
             </g>
 
             <!-- 4. Mid-Ocean Ridge -->
             <g class="hotspot" onclick="showFeature('ridge')">
-                <circle cx="490" cy="180" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
+                <circle cx="490" cy="180" r="28" fill="transparent"/>
+                <circle class="btn-circle" cx="490" cy="180" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
                 <text x="490" y="185" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">4</text>
                 <text x="490" y="145" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">Mid-Ocean Ridge</text>
             </g>
 
             <!-- 5. Ocean Trench -->
             <g class="hotspot" onclick="showFeature('trench')">
-                <circle cx="660" cy="350" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
+                <circle cx="660" cy="350" r="28" fill="transparent"/>
+                <circle class="btn-circle" cx="660" cy="350" r="18" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
                 <text x="660" y="355" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">5</text>
                 <text x="720" y="365" font-size="12" font-weight="bold" fill="#ffffff">Trench</text>
             </g>
